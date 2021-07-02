@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>킥보드 현황</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+<table border='1'>
+    <tr>
+        <td>킥보드번호  </td>
+        <td>빌려간놈이름  </td>
+        <td>빌려간놈번호  </td>
+        <td>킥보드 대여 상태</td>
+	<td>헬멧착용여부</td>
+
+    </tr>
+
+{% for kick in kicks %}
+    <tr>
+        <td>{{ kick.id }}</td>
+        <td>{{ kick.name }}  </td>
+        <td>{{ kick.phone }}  </td>
+        <td>{{ kick.lend }}  </td>
+	<td>{{ kick.helmet }}  </td>
+    </tr>
+{% endfor %}
+</table>
+
+</body>
+</html>

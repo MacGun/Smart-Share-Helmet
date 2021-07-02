@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>HEXAPOD</title>
+ 
+    
+    <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
+ 
+    <link href="http://getbootstrap.com/examples/jumbotron-narrow/jumbotron-narrow.css" rel="stylesheet">
+    <link href="../static/lend.css" rel="stylesheet">
+    
+  </head>
+ 
+  <body>
+      {% for check in checks %}
+
+      {% if check.lend == False %}
+
+      <div class="jumbotron">
+        <h1>킥보드 대여 페이지</h1>
+        <form action="/" class="form-signin" method="post">
+          <label for="inputName" class="sr-only">Name</label>
+          <input type="text" name="inputName" class="form-control" placeholder="Name" required autofocus><br />
+          <label for="inputPhone" class="sr-only">Phone</label>
+          <input type="text" name="inputPhone" class="form-control" placeholder="Phone number" required autofocus>
+          <input type="submit" value="대여" />         
+        </form>
+      </div>
+        {% else %}
+        <div> 이미  대여된  킥보드입니다.  </div>
+        <form action="http://112.145.215.121:5000/return" method="post" >
+          <p>반남하시겠습니까?</p><br />
+          <input type="submit" value="반납" />
+        </form>
+
+       {% endif %}
+
+
+      {% endfor %}
+      <footer class="footer">
+        <p>&copy; HEXAPOD 2021</p>
+      </footer>
+ 
+    </div>
+  </body>
+</html>
