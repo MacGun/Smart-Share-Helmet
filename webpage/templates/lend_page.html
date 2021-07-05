@@ -12,26 +12,28 @@
   </head>
  
   <body>
+      <div class="block"></div>
       {% for check in checks %}
 
       {% if check.lend == False %}
-
       <div class="jumbotron">
-        <h1>킥보드 대여 페이지</h1>
+        <h1 class="header">보드 대여 페이지</h1>
         <form action="/" class="form-signin" method="post">
           <label for="inputName" class="sr-only">Name</label>
-          <input type="text" name="inputName" class="form-control" placeholder="Name" required autofocus><br />
+          <input type="text" name="inputName" class="form-control" placeholder="Name" required autofocus><br>
           <label for="inputPhone" class="sr-only">Phone</label>
-          <input type="text" name="inputPhone" class="form-control" placeholder="Phone number" required autofocus>
-          <input type="submit" value="대여" />         
+          <input type="text" name="inputPhone" class="form-control" placeholder="Phone number" required autofocus><br>
+		  <p></p>
+          <input type="submit" value="대여" class="submit-btn"> 
         </form>
       </div>
         {% else %}
-        <div> 이미  대여된  킥보드입니다.  </div>
+        <div class="jumbotron"> 
         <form action="http://112.145.215.121:5000/return" method="post" >
-          <p>반남하시겠습니까?</p><br />
-          <input type="submit" value="반납" />
+          <p class="explain">이미 대여된 킥보드입니다.<br> 반납하시겠습니까?</p><br />
+          <input type="submit" value="반납" class="return">
         </form>
+		</div>
 
        {% endif %}
 
