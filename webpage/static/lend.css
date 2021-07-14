@@ -81,10 +81,6 @@ label {
   border-radius: 1px;
 }
 
-.submit-btn:hover {
-  background-color: rgba(9, 9, 121, 1);
-}
-
 .block{
   height:30vh;
 }

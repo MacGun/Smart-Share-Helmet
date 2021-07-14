@@ -1,0 +1,55 @@
+html{
+  min-height: 100%;
+  margin: auto auto;
+}
+
+body {
+  margin: auto auto;
+  background: linear-gradient(135deg, rgba(2,0,36,1) 0%, rgba(9,9,121,1) 35%, rgba(255,0,245,1) 100%);
+  background-repeat: no-repeat;
+}
+
+div {
+  margin: auto auto;
+  border-top: 40px;
+}
+
+footer {
+  margin: auto auto;
+  text-align: center;
+}
+
+.jumbotron {
+  width: 400px;
+  height: 400px;
+  color:white;
+  background-color: rgba(20,20,20,0.7);
+  margin: auto auto;
+}
+
+.block{
+  height: 30vh;
+}
+
+.explain{
+  text-align: center;
+  padding-top: 120px;
+  font-size: 20px;
+}
+
+#retry{
+  margin-left: 40px;
+  margin-bottom: 10px;
+  height: 40px;
+  width: 320px;
+  border: 0;
+  border-radius: 1px;
+}
+
+#back{
+ margin-left: 40px;
+  height: 40px;
+  width: 320px;
+  border: 0;
+  border-radius: 1px;
+}
