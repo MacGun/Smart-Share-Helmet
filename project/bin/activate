@@ -74,3 +74,5 @@ fi
 if [ -n "${BASH:-}" -o -n "${ZSH_VERSION:-}" ] ; then
     hash -r
 fi
+
+alias server='~/Smart-Share-Helmet/app/src/control_server.sh'
