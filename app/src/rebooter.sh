@@ -1,7 +1,8 @@
 PID=$$
 DIR=~/Smart-Share-Helmet/app
 PIDDIR=${DIR}/pid
-PIDFILE=${PIDDIR}/refresher.pid
+PIDFILE=${PIDDIR}/rebooter.pid
+TIMER=`cat ${DIR}/src/timer`
 
 trap "cleanup; exit" SIGHUP SIGINT SIGTERM
 
@@ -35,5 +36,5 @@ while true; do
     else
         echo -e "`log` Status Code: $STATE."
     fi
-    `sleep 10`
+    `sleep $TIMER`
 done

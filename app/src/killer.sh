@@ -17,7 +17,8 @@ if [[ -z ${array[@]} ]];then
     exit
 else
     for process in ${array[@]};do
-        kill `cat ${PIDDIR}/${process}`
+        kill `cat ${PIDDIR}/${process}` 2> /dev/null
+        rm ${PIDDIR}/${process} 2> /dev/null
     done
     echo "`log` Killed Gunicorn Apps"
 fi

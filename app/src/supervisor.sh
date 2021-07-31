@@ -36,7 +36,7 @@ while true; do
         kill $PARK_APP
     fi
     echo "`log` Start Gunicorn Server."
-    echo `$DIR/src/runserver.sh 1>&2`
+    echo `$DIR/src/runserver.sh 1>&2 | $DIR/src/logger.sh`
     echo "`log` Server Exited."
     `sleep 1`
 done
