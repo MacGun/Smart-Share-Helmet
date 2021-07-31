@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>HEXAPOD</title>
+ 
+    
+    <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
+ 
+    <link href="http://getbootstrap.com/examples/jumbotron-narrow/jumbotron-narrow.css" rel="stylesheet">
+    <link href="../static/lend.css" rel="stylesheet">
+    
+  </head>
+ 
+  <body>
+      <div class="block"></div>
+
+      {% if checks.lend == False %}
+      <div class="jumbotron">
+        <h1 class="header">헬멧 대여 페이지</h1>
+        <form action="/" class="form-signin" method="post">
+          <label for="inputName" class="sr-only">Name</label>
+          <input type="text" name="inputName" class="form-control" placeholder="Name" required autofocus><br>
+          <label for="inputPhone" class="sr-only">Phone</label>
+          <input type="text" name="inputPhone" class="form-control" placeholder="Phone number" required autofocus><br>
+		  <p id="pad"></p>
+          <input type="submit" value="대여" class="submit-btn"> 
+        </form>
+      </div>
+        {% else %}
+        <div class="jumbotron"> 
+        <form action="{{host}}return" method="post" >
+          <p class="explain">이미 대여된 헬멧입니다.<br> 반납하시겠습니까?</p><br />
+          <input type="submit" value="반납" class="return">
+        </form>
+		</div>
+
+       {% endif %}
+
+
+      <footer class="footer">
+        <p>&copy; HEXAPOD 2021</p>
+      </footer>
+ 
+    </div>
+  </body>
+</html>
