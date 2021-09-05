@@ -7,7 +7,7 @@ TIMER=`cat ${DIR}/src/timer`
 trap "cleanup; exit" SIGHUP SIGINT SIGTERM
 
 function cleanup() {
-    rm ${DIR}/pid/refresher.pid
+    rm ${PIDfILE}
     echo -e "`log` Rebooter Terminated."
 }
 

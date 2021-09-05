@@ -23,7 +23,6 @@ if [[ -a $PIDFILE ]];then
     echo "`log` Already Running Supervisor. (pid: `cat ${PIDFILE}`)"
     exit
 else
-    touch ${PIDDIR}
     echo $PID > ${PIDFILE}
     echo "`log` Running Gunicorn Supervisor."
 fi

@@ -1,5 +1,4 @@
 import multiprocessing
-import logging.config
 
 DIR='/home/park/Smart-Share-Helmet/app/'
 workers=multiprocessing.cpu_count() //2 
