@@ -1,3 +1,4 @@
+from bson.objectid import ObjectId
 from flask import Flask, render_template, request, redirect
 import pymongo as mongo
 from datetime import datetime
@@ -30,7 +31,7 @@ def get_log(rows=30):
     RES         = DB_LOG.find({}, limit=rows)
     temp        = [*RES]
     converter   = lambda x: (x[0], int(x[1])) if type(x[1]) != str else x
-    result      = [dict(map(converter, elem.items())) for elem in temp]
+    result      = [dict(map(converter, {key:value for (key,value) in elem.items() if key != "_id"}.items())) for elem in temp]
     return result
 
 @app.route('/', methods=['POST','GET'])
