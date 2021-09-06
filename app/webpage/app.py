@@ -5,7 +5,8 @@ from datetime import datetime
 app         = Flask(__name__)
 
 #database configuration
-DB              = mongo.MongoClient('localhost', 27017)
+CLIENT          = mongo.MongoClient('localhost', 27017)
+DB              = CLIENT['kick']
 DB_KICKBOARD    = DB.kickboard_real
 DB_LOG          = DB.kickboard_log
 
