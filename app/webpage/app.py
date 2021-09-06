@@ -30,8 +30,14 @@ def write_log():
 def get_log(rows=30):
     RES         = DB_LOG.find({}, limit=rows)
     temp        = [*RES]
-    converter   = lambda x: (x[0], int(x[1])) if type(x[1]) != str else x
-    result      = [dict(map(converter, {key:value for (key,value) in elem.items() if key != "_id"}.items())) for elem in temp]
+    def converter(dict_a):
+        temp = {**dict_a}
+        temp['date'] = temp['date'].strftime("%Y-%m-%d %H:%M:%S")
+        temp['ischarging']  = int(temp['ischarging'])
+        temp['helmet']      = int(temp['helmet'])
+        temp['lend']        = int(temp['lend'])
+        return temp
+    result      = [dict(map(converter, {key:value for (key,value) in elem.items() if key != "_id"})) for elem in temp]
     return result
 
 @app.route('/', methods=['POST','GET'])
