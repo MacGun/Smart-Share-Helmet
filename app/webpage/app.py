@@ -72,7 +72,7 @@ def checkCharger():
     if request.method == 'POST':
         state = request.form['state']
         if state == '1' or state == '0':
-            DB_KICKBOARD.update_one({
+            DB_KICKBOARD.update_one({"id":1}, {
                 "ischarging" : bool(int(state))
             })
             write_log()
@@ -85,7 +85,7 @@ def checkCharger():
     elif request.method == "GET":
         state = request.args['state']
         if state == '1' or state == '0':
-            DB_KICKBOARD.update_one({
+            DB_KICKBOARD.update_one({"id":1}, {
                 "ischarging" : bool(int(state))
             })
             write_log()
