@@ -30,7 +30,7 @@ def get_log(rows=30):
     RES         = DB_LOG.find({}, limit=rows)
     temp        = [*RES]
     converter   = lambda x: (x[0], int(x[1])) if type(x[1]) != str else x
-    result      = [dict(map(converter, elem.items)) for elem in temp]
+    result      = [dict(map(converter, elem.items())) for elem in temp]
     return result
 
 @app.route('/', methods=['POST','GET'])
