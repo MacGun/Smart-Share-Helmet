@@ -1,86 +1,50 @@
 from flask import Flask, render_template, request, redirect
-import pymysql as sql
+import pymongo as mongo
 from datetime import datetime
 
 app         = Flask(__name__)
 
 #database configuration
-DB          = sql.connect(
-                user='root',
-                passwd='134625',
-                host='localhost',
-                db='hexpod',
-                charset='utf8'
-            )
-CUR         = DB.cursor(sql.cursors.DictCursor)
+DB              = mongo.MongoClient('localhost', 27017)
+DB_KICKBOARD    = DB.kickboard_real
+DB_LOG          = DB.kickboard_log
+
 PORT        = 5000
 HOST        = "http://cloud.park-cloud.co19.kr:{port}/".format(port=PORT)
-TABLE_K     = "kickboard_real"
-TABLE_L     = "kickboard_log"
-SELECT_ALL  = {
-    "table"     : TABLE_K,
-    "condition" :"",
-    "target"    : "*"
-}
-QUERY_BASIC = {
-    "table"     : TABLE_K,
-    "condition" : "",
-}
-LOG_BASIC   = {
-    "table"     : TABLE_L,
-    "condition" : ""
-}
 
 
 def get_time_stamp():
     now = datetime.now()
-    return {'timestamp': now.strftime("%Y-%m-%d %H:%M:%S")}
+    return {'date': now.strftime("%Y-%m-%d %H:%M:%S")}
 
-def query(func, query_dict):
-    func = func.lower()
-    if func == 'select':
-        MSG_FORM    = "select {target} from {table} {condition};".format(**query_dict)
-    elif func == 'update':
-        STMT        = ",".join(['{}={}'.format(key, value) if type(value) == type(int) else '{}="{}"'.format(key, value) for (key, value) in query_dict.items() if key != 'condition' and key != 'table'])
-        MSG_FORM    = "update {table} set {stmt} {condition};".format(stmt=STMT, **query_dict)
-    elif func == 'insert':
-        VALUES      = '{table} ("{timestamp}",{id},"{name}","{phone}",{lend},{helmet},{ischarging}) "{condition}"'.format(**query_dict).split()
-        MSG_FORM    = "insert into {table} values {values} {condition};".format(table=VALUES[0], values=VALUES[1], condition=VALUES[2])
-    return MSG_FORM
 
 def write_log():
-    CUR.execute(query("select", SELECT_ALL))
-    result = CUR.fetchone()
-    query_dict = {
+    result = DB_KICKBOARD.find_one({})
+    query   = {
         **get_time_stamp(),
-        **result,
-        **LOG_BASIC
+        **{key:value for (key,value) in result.items() if key != '_id'}
     }
-    CUR.execute(query("insert", query_dict))
-    DB.commit()
+    DB_LOG.insert_one(query)
 
 def get_log(rows=30):
-    CUR.execute(query("select", {
-                **SELECT_ALL,
-                "table"     : "kickboard_log",
-                "condition" : "order by timestamp desc limit {}".format(rows)
-    }))
-    result = CUR.fetchall()
-    return result;
+    RES = DB_LOG.find({}, limit=rows)
+    result = [*RES]
+    return result
 
 @app.route('/', methods=['POST','GET'])
 def lending():
-    CUR.execute(query('select', SELECT_ALL))
-    checks = CUR.fetchone()
+    checks = DB_KICKBOARD.find_one({})
     if request.method == 'POST':
-        data = request.form
-        query_dict = {
-                        **QUERY_BASIC,
-                        'lend'      : 1,
-                        'name'      : data['inputName'],
-                        'phone'     : data['inputPhone']
-                     }
-        CUR.execute(query("update", query_dict))
+        data    = request.form
+        DB_KICKBOARD.update_one({
+            "id" : 1
+        }, {
+            "$set"  : {
+                "name"  : data['name'],
+                "phone" : data['phone'],
+                "lend"  : True
+            }
+        })
         write_log()
         return redirect(HOST+"finish", code=302)
     return render_template('lend_page.html', checks=checks, host=HOST)
@@ -88,16 +52,14 @@ def lending():
 @app.route('/return', methods=['POST'])
 def return_kickboard():
     if request.method == 'POST':
-        CUR.execute(query("select", SELECT_ALL))
-        result = CUR.fetchone()
-        if result['ischarging'] == 1:
-            query_dict = {
-                **QUERY_BASIC,
-                "name"      : "",
-                "phone"     : "",
-                "lend"      : 0
+        result = DB_KICKBOARD.find_one({})
+        if result['ischarging']:
+            query = {
+                "name"      : None,
+                "phone"     : None,
+                "lend"      : False
             }
-            CUR.execute(query('update', query_dict))
+            RES = DB_KICKBOARD.update_one({"id":1}, {"$set": query})
             write_log()
             return redirect(HOST, code=302)
         else:
@@ -105,14 +67,12 @@ def return_kickboard():
 
 @app.route('/checkCharger', methods=['GET', 'POST'])
 def checkCharger():
-    update = lambda state: CUR.execute(query("update", {
-                    **QUERY_BASIC,
-                    'ischarging': int(state)
-                }))
     if request.method == 'POST':
         state = request.form['state']
         if state == '1' or state == '0':
-            update(state)
+            DB_KICKBOARD.update_one({
+                "ischarging" : bool(int(state))
+            })
             write_log()
         if state == '1':
             return "Mounted."
@@ -123,7 +83,9 @@ def checkCharger():
     elif request.method == "GET":
         state = request.args['state']
         if state == '1' or state == '0':
-            update(state)
+            DB_KICKBOARD.update_one({
+                "ischarging" : bool(int(state))
+            })
             write_log()
         if state == '1':
             return "Mounted."
@@ -140,20 +102,19 @@ def finish():
 
 @app.route('/admin')
 def show_all():
-    CUR.execute(query("select", SELECT_ALL))
-    kicks = CUR.fetchone()
+    kicks = DB_KICKBOARD.find_one({})
     return render_template('show_kick.html', kicks=kicks)
 
 @app.route('/helmet', methods=["POST","GET"])
 def helmet():
-    update = lambda state: CUR.execute(query("update", {
-                **QUERY_BASIC,
-                "helmet": int(state)
-            }))
     if request.method == 'POST':
         state = request.form['state']
         if state == '1' or state == '0':
-            update(state)
+            DB_KICKBOARD.update_one({"id": 1}, {
+                "$set": {
+                    "helmet" : bool(int(state))
+                }
+            })
             write_log()
         if state == '1':
             return "200"
@@ -165,7 +126,11 @@ def helmet():
     elif request.method == 'GET':
         state = request.args['state']
         if state == '1' or state == '0':
-            update(state)
+            DB_KICKBOARD.update_one({"id": 1}, {
+                "$set": {
+                    "helmet" : bool(int(state))
+                }
+            })
             write_log()
         if state == '1':
             return "200"
