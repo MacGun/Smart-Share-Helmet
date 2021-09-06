@@ -27,8 +27,9 @@ def write_log():
     DB_LOG.insert_one(query)
 
 def get_log(rows=30):
-    RES = DB_LOG.find({}, limit=rows)
-    result = [*RES]
+    RES     = DB_LOG.find({}, limit=rows)
+    temp    = [*RES]
+    result  = dict(map(lambda x: (x[0], int(x[1])) if type(x[1]) != str else x), temp.items())
     return result
 
 @app.route('/', methods=['POST','GET'])
@@ -43,7 +44,7 @@ def lending():
             "$set"  : {
                 "name"  : data['inputName'],
                 "phone" : data['inputPhone'],
-                "lend"  : 1
+                "lend"  : int(1)
             }
         })
         write_log()
@@ -58,7 +59,7 @@ def return_kickboard():
             query = {
                 "name"      : "",
                 "phone"     : "",
-                "lend"      : 0
+                "lend"      : int(0)
             }
             RES = DB_KICKBOARD.update_one({"id":1}, {"$set": query})
             write_log()
