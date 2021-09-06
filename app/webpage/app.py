@@ -15,8 +15,7 @@ HOST        = "http://cloud.park-cloud.co19.kr:{port}/".format(port=PORT)
 
 
 def get_time_stamp():
-    now = datetime.now()
-    return {'date': now.strftime("%Y-%m-%d %H:%M:%S")}
+    return {'date': datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
 
 
 def write_log():
@@ -114,7 +113,7 @@ def helmet():
         if state == '1' or state == '0':
             DB_KICKBOARD.update_one({"id": 1}, {
                 "$set": {
-                    "helmet" : bool(int(state))
+                    "helmet" : int(state)
                 }
             })
             write_log()
@@ -130,7 +129,7 @@ def helmet():
         if state == '1' or state == '0':
             DB_KICKBOARD.update_one({"id": 1}, {
                 "$set": {
-                    "helmet" : bool(int(state))
+                    "helmet" : int(state)
                 }
             })
             write_log()
