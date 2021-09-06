@@ -35,6 +35,7 @@ def get_log(rows=30):
 @app.route('/', methods=['POST','GET'])
 def lending():
     checks = DB_KICKBOARD.find_one({})
+    checks['date'] = checks['date'].strftime("%Y-%m-%d %H:%M:%S")
     if request.method == 'POST':
         data    = request.form
         DB_KICKBOARD.update_one({
