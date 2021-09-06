@@ -29,7 +29,7 @@ def write_log():
 def get_log(rows=30):
     RES     = DB_LOG.find({}, limit=rows)
     temp    = [*RES]
-    result  = dict(map(lambda x: (x[0], int(x[1])) if type(x[1]) != str else x), temp.items())
+    result  = dict(map(lambda x: (x[0], int(x[1])) if type(x[1]) != str else x, temp.items()))
     return result
 
 @app.route('/', methods=['POST','GET'])
