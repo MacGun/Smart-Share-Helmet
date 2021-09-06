@@ -73,7 +73,7 @@ def checkCharger():
         state = request.form['state']
         if state == '1' or state == '0':
             DB_KICKBOARD.update_one({"id":1}, {
-                "ischarging" : bool(int(state))
+                "$set" : {"ischarging" : bool(int(state))}
             })
             write_log()
         if state == '1':
@@ -86,7 +86,7 @@ def checkCharger():
         state = request.args['state']
         if state == '1' or state == '0':
             DB_KICKBOARD.update_one({"id":1}, {
-                "ischarging" : bool(int(state))
+                "$set" : {"ischarging" : bool(int(state))}
             })
             write_log()
         if state == '1':
