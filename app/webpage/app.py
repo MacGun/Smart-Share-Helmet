@@ -44,7 +44,7 @@ def lending():
             "$set"  : {
                 "name"  : data['inputName'],
                 "phone" : data['inputPhone'],
-                "lend"  : True
+                "lend"  : 1
             }
         })
         write_log()
@@ -57,9 +57,9 @@ def return_kickboard():
         result = DB_KICKBOARD.find_one({})
         if result['ischarging']:
             query = {
-                "name"      : None,
-                "phone"     : None,
-                "lend"      : False
+                "name"      : "",
+                "phone"     : "",
+                "lend"      : 0
             }
             RES = DB_KICKBOARD.update_one({"id":1}, {"$set": query})
             write_log()
@@ -73,7 +73,7 @@ def checkCharger():
         state = request.form['state']
         if state == '1' or state == '0':
             DB_KICKBOARD.update_one({"id":1}, {
-                "$set" : {"ischarging" : bool(int(state))}
+                "$set" : {"ischarging" : int(state)}
             })
             write_log()
         if state == '1':
@@ -86,7 +86,7 @@ def checkCharger():
         state = request.args['state']
         if state == '1' or state == '0':
             DB_KICKBOARD.update_one({"id":1}, {
-                "$set" : {"ischarging" : bool(int(state))}
+                "$set" : {"ischarging" : int(state)}
             })
             write_log()
         if state == '1':
