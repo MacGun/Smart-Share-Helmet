@@ -41,8 +41,8 @@ def lending():
             "id" : 1
         }, {
             "$set"  : {
-                "name"  : data['name'],
-                "phone" : data['phone'],
+                "name"  : data['inputName'],
+                "phone" : data['inputPhone'],
                 "lend"  : True
             }
         })
